@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">AdViewer</string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_register">REGISTER</string>
+    <string name="btn_link_to_register">Not a member? Sign up now.</string>
+    <string name="btn_link_to_login">Already registred! Login Me.</string>
+    <string name="welcome">Welcome</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="name">Fullname</string>
+    <string name="alert_popup_str">Alert</string>
+    <string name="alert_popup_msg_str">Message</string>
+    <string name="text_accounts">All Accounts</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="text_login">Login</string>
+    <string name="text_register">Register</string>
+    <string name="error_message_name">Enter Full Name</string>
+    <string name="error_message_email">Enter Email</string>
+    <string name="error_message_invalid_email">Enter Valid Email</string>
+    <string name="error_message_age">Enter Age</string>
+    <string name="error_message_password">Enter Password</string>
+    <string name="success_message">Congratulations!! you have been registered</string>
+    <string name="error_email_exists">Email Already Exists</string>
+    <string name="error_password_match">Password Does Not Matches</string>
+    <string name="error_valid_email_password">Check if you are registered. If yes, verify your credentials.</string>
+    <string name="success_message_text">Click on OK and sign in to continue</string>
+    <string name="ok_text">OK</string>
+    <string name="ad_notif_title">Ad Reminder</string>
+    <string name="ad_notif_content">Hey! It\'s time to watch new ad</string>
+    <string name="notification_error_msg">Display notification throws an error.</string>
+    <string name="ads_min_limit">Ad should be watched at least once</string>
+    <string name="ads_max_limit">Maximum 10 ads could be watched</string>
+    <string name="ads_notification_count_text">Please enter the number of times you want to watch the ads.</string>
+    <string name="one_min_timer">1 minute</string>
+    <string name="five_min_timer">5 minute</string>
+    <string name="ten_min_timer">10 minute</string>
+    <string name="interstitial_ad_load_fail">Ad did not load. Please retry.</string>
+    <string name="Coins">Coins: %d</string>
+    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="reward_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="home">Home</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="settings">Settings</string>
+    <string name="welcome_main">WELCOME</string>
+    <string name="main_title_first">Watch ads</string>
+    <string name="main_title_second">to get rewards</string>
+    <string name="ad_watch_option_text">Select the ad you want to watch</string>
+    <string name="interstitial_ad_btn">Interstitial Ad</string>
+    <string name="reward_ad_btn">Reward Ad</string>
+    <string name="coins_initial_value">Coins: 0</string>
+    <string name="ads_count_text">Number of ads you want to watch</string>
+    <string name="max_ads_hint">max could be 10</string>
+    <string name="interval_of_notifications">Interval</string>
+    <string name="save_notifocation_setting">Save Changes</string>
+    <string name="sign_in_title_text">Sign in your account</string>
+    <string name="signup_title_text">Fill in the following details</string>
+
+</resources>
