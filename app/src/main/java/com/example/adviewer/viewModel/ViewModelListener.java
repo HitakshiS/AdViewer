@@ -1,4 +1,4 @@
-package com.example.adviewer.model;
+package com.example.adviewer.viewModel;
 
 public interface LoginListener {
     void onStarted();
@@ -6,5 +6,7 @@ public interface LoginListener {
     void onSuccess();
 
     void onFailure(String message);
+
+    void navigate(String message);
 
 }
