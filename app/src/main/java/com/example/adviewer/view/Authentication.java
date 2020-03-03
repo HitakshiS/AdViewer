@@ -8,8 +8,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.adviewer.view.HomeScreen;
-import com.example.adviewer.view.MainActivity;
+import com.example.adviewer.view.SignInScreen;
 import com.example.adviewer.view.SplashScreen;
 
 public class Authentication extends AppCompatActivity {
@@ -25,7 +24,7 @@ public class Authentication extends AppCompatActivity {
         if (Islogin) {
             activityIntent = new Intent(this, SplashScreen.class);
         } else {
-            activityIntent = new Intent(this, MainActivity.class);
+            activityIntent = new Intent(this, SignInScreen.class);
         }
         startActivity(activityIntent);
         finish();
