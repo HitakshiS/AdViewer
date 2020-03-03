@@ -59,5 +59,25 @@
     <string name="save_notifocation_setting">Save Changes</string>
     <string name="sign_in_title_text">Sign in your account</string>
     <string name="signup_title_text">Fill in the following details</string>
-
+    <string name="reward_ad_duration_txt">Total ad duration watched:</string>
+    <string name="zero_text">0</string>
+    <string name="reward_ads_text">Total:</string>
+    <string name="interstitial_ads_text">Total:</string>
+    <string name="zero_sec_text">0 sec</string>
+    <string name="ad_network_error">The ad request was unsuccessful due to network connectivity.</string>
+    <string name="lack_of_inventory_error">The ad request was successful, but no ad was returned due to lack of ad inventory.</string>
+    <string name="server_error">An invalid response was received from the ad server.</string>
+    <string name="invalid_id_error">The ad request was invalid; for instance, the ad unit ID was incorrect.</string>
+    <string name="ad_error_general">Ad failed to load please retry.</string>
+    <string name="interstitial_ad_error">Ad did not load. Please retry.</string>
+    <string name="interstitial_ad_loaded">Interstitial Ad Loaded</string>
+    <string name="reward_ad_loaded">Rewarded ad loaded</string>
+    <string name="reward_ad_failed_error">Failed to show rewarded ad</string>
+    <string name="ads_select_text">Select the ad you want to watch</string>
+    <string name="interstitial_ads_in_a_day">Day: </string>
+    <string name="interstitial_ads_in_a_month">Month: </string>
+    <string name="reward_ads_in_a_day">Day: </string>
+    <string name="reward_ads_in_a_month">Month: </string>
 </resources>
+
+

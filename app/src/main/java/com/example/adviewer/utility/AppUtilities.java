@@ -3,15 +3,17 @@ package com.example.adviewer.utility;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 
 import com.example.adviewer.BuildConfig;
 
-public class RateApp {
+public class AppUtilities {
     private Context context;
 
-    public RateApp(Context context) {
+    public AppUtilities(Context context) {
         this.context = context;
     }
     public void rateApp() {
@@ -49,6 +51,13 @@ public class RateApp {
         } catch (Exception e) {
             // e.toString();
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

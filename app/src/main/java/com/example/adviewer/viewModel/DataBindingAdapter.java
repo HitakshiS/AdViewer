@@ -3,31 +3,59 @@ package com.example.adviewer.viewModel;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
-import androidx.appcompat.widget.AppCompatSpinner;
+import android.widget.Spinner;
+import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
+import androidx.databinding.ObservableField;
+import androidx.databinding.adapters.AdapterViewBindingAdapter;
 
-public class SpinnerBindingUtil  {
-    @BindingAdapter(value = {"selectedValue", "selectedValueAttrChanged"}, requireAll = false)
-    public static void bindSpinnerData(AppCompatSpinner pAppCompatSpinner, String newSelectedValue, final InverseBindingListener newTextAttrChanged) {
-        pAppCompatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                newTextAttrChanged.onChange();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        if (newSelectedValue != null) {
-            int pos = ((ArrayAdapter<String>) pAppCompatSpinner.getAdapter()).getPosition(newSelectedValue);
-            pAppCompatSpinner.setSelection(pos, true);
+import com.example.adviewer.R;
+
+public class DataBindingAdapter {
+    @BindingAdapter("android:text")
+    public static void setTextViewText(TextView textView, String text) {
+        if (text != null) {
+            textView.setText(text);
+        } else {
+            textView.setText("");
         }
     }
-    @InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
-    public static String captureSelectedValue(AppCompatSpinner pAppCompatSpinner) {
-        return (String) pAppCompatSpinner.getSelectedItem();
-    }
+
+//    @InverseBindingAdapter(attribute = "selectedItem", event = "selectedItemAttrChanged")
+//    public static String getSelectedItem(Spinner spinner) {
+//
+//        String selectedItem = spinner.getSelectedItem().toString();
+//
+//        return selectedItem;
+//
+//    }
+
+//    @BindingAdapter(value = {"selectedItem"})
+//    public static void setSelectedItem(Spinner spinner, String spinnerItem) {
+//        if (spinner.getAdapter() == null) {
+//            return;
+//        }
+//        // Other code omitted for simplicity
+//    }
+//
+//    @BindingAdapter("android:selectedItemPosition")
+//    public static void setSelectedItemPosition(AdapterView view, int position) {
+//        if (view.getSelectedItemPosition() != position) {
+//            view.setSelection(position);
+//        }
+//    }
+//
+//    @BindingAdapter(value = {"android:onItemSelected", "android:onNothingSelected",
+//            "android:selectedItemPositionAttrChanged" }, requireAll = false)
+//    public static void setOnItemSelectedListener(AdapterView view, final AdapterViewBindingAdapter.OnItemSelected selected,
+//                                                 final AdapterViewBindingAdapter.OnNothingSelected nothingSelected, final InverseBindingListener attrChanged) {
+//        if (selected == null && nothingSelected == null && attrChanged == null) {
+//            view.setOnItemSelectedListener(null);
+//        } else {
+//            view.setOnItemSelectedListener(
+//                    new AdapterViewBindingAdapter.OnItemSelectedComponentListener(selected, nothingSelected, attrChanged));
+//        }
+//    }
 }

@@ -1,12 +1,8 @@
 package com.example.adviewer.viewModel;
 
-public interface LoginListener {
-    void onStarted();
-
+public interface ViewModelListener {
     void onSuccess();
 
     void onFailure(String message);
-
-    void navigate(String message);
 
 }

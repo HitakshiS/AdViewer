@@ -1,20 +1,20 @@
 package com.example.adviewer.view;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.adviewer.R;
-import com.example.adviewer.model.InputValidation;
-import com.example.adviewer.model.UserDatabase;
+import com.example.adviewer.databinding.SigninScreenBinding;
+import com.example.adviewer.viewModel.ViewModelListener;
+import com.example.adviewer.viewModel.LoginViewModel;
 
-public class SignInScreen extends AppCompatActivity implements View.OnClickListener {
+public class SignInScreen extends AppCompatActivity implements View.OnClickListener, ViewModelListener {
     private final AppCompatActivity activity = SignInScreen.this;
 
     private EditText textInputEditTextEmail;
@@ -24,49 +24,50 @@ public class SignInScreen extends AppCompatActivity implements View.OnClickListe
 
     private Button textViewLinkRegister;
 
-    private InputValidation inputValidation;
-    private UserDatabase databaseHelper;
-    Boolean isLoggedIn = false;
+    SigninScreenBinding binding;
+    LoginViewModel loginModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signin_screen);
+        binding = DataBindingUtil.setContentView(SignInScreen.this, R.layout.signin_screen);
+        loginModel = new LoginViewModel(SignInScreen.this);
+        binding.setViewModel(loginModel);
         getSupportActionBar().hide();
 
-        initViews();
+        textInputEditTextEmail = binding.email;
+        textInputEditTextPassword = binding.password;
+        appCompatButtonLogin = binding.btnLogin;
+        appCompatButtonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginModel.onLoginButtonClick(appCompatButtonLogin);
+            }
+        });
+
+        textViewLinkRegister = binding.btnLinkToRegisterScreen;
+        textViewLinkRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginModel.onLoginButtonClick(textViewLinkRegister);
+            }
+        });
         initListeners();
-        initObjects();
-    }
-
-
-    private void initViews() {
-
-        textInputEditTextEmail = findViewById(R.id.email);
-        textInputEditTextPassword = findViewById(R.id.password);
-        appCompatButtonLogin = findViewById(R.id.btnLogin);
-        textViewLinkRegister = findViewById(R.id.btnLinkToRegisterScreen);
+        loginModel.setEmail(textInputEditTextEmail.getText().toString());
+        loginModel.setPassword(textInputEditTextPassword.getText().toString());
 
     }
 
 
     private void initListeners() {
-        appCompatButtonLogin.setOnClickListener(this);
         textViewLinkRegister.setOnClickListener(this);
     }
 
-    private void initObjects() {
-        databaseHelper = new UserDatabase(activity);
-        inputValidation = new InputValidation(activity);
-
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnLogin:
-                verifyFromSQLite();
-                break;
             case R.id.btnLinkToRegisterScreen:
                 Intent intentRegister = new Intent(getApplicationContext(), SignUpScreen.class);
                 startActivity(intentRegister);
@@ -74,39 +75,32 @@ public class SignInScreen extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void verifyFromSQLite() {
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextEmail)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_email), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!inputValidation.isInputEditTextEmail(textInputEditTextEmail)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_invalid_email), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_password), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim()
-                , textInputEditTextPassword.getText().toString().trim())) {
-            emptyInputEditText();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SignInScreen.this);
-            isLoggedIn = true;
-            prefs.edit().putBoolean("Islogin", isLoggedIn).apply();
-            prefs.edit().putString("userEmail", textInputEditTextEmail.getText().toString().trim()).commit();
-            Intent homeIntent = new Intent(SignInScreen.this, HomeScreen.class);
-            startActivity(homeIntent);
-
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_valid_email_password), Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
-
 
     private void emptyInputEditText() {
         textInputEditTextEmail.setText(null);
         textInputEditTextPassword.setText(null);
     }
+
+    @Override
+    public void onBackPressed() {
+        this.finishAffinity();
+    }
+
+    @Override
+    public void onSuccess() {
+        emptyInputEditText();
+        Intent homeIntent = new Intent(SignInScreen.this, HomeScreen.class);
+        startActivity(homeIntent);
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
 }
 

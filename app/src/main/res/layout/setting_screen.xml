@@ -1,47 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/ads_count_text"
-        android:textColor="#000000"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:paddingBottom="20dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/max_ads_hint"
-        android:paddingHorizontal="10dp"
-        android:layout_marginHorizontal="20dp"
-        android:inputType="number"
-        android:id="@+id/number_of_ads_text"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/interval_of_notifications"
-        android:textColor="#000000"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:paddingTop="40dp"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
-        android:layout_marginHorizontal="20dp"
-        android:id="@+id/interval_spinner"
-        android:paddingTop="20dp"
-        />
-    <Button
-        android:layout_marginTop="80dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_notifocation_setting"
-        android:id="@+id/save_btn"/>
+    <data>
 
-</LinearLayout>
+        <variable
+            name="setting"
+            type="com.example.adviewer.viewModel.SettingViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#DCE8F5"
+        android:orientation="vertical">
+        <include
+            layout="@layout/custom_header"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#DCE8F5"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:fontFamily="cursive"
+                    android:gravity="center"
+                    android:paddingBottom="40dp"
+                    android:text="@string/ads_count_text"
+                    android:textColor="#000000"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/number_of_ads_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#ECF1F7"
+                    android:hint="@string/max_ads_hint"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:padding="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:singleLine="true"
+                    android:text="@={setting.numberOfAds}"
+                    android:textColor="#000000"
+                    android:textColorHint="#C8D1DB" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="cursive"
+                    android:gravity="center"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
+                    android:text="@string/interval_of_notifications"
+                    android:textColor="#000000"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/interval_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ECF1F7"
+                    android:entries="@array/interval"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:popupBackground="#ECF1F7"
+                    android:selectedItemPosition="@{setting.selectedPosition}"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/save_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:background="#77B5F7"
+                    android:onClick="@{(view)-> setting.onSettingsSaveClick(view)}"
+                    android:text="@string/save_notifocation_setting"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

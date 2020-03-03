@@ -1,4 +1,4 @@
-package com.example.adviewer.model;
+package com.example.adviewer.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,9 +7,6 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.adviewer.view.SignInScreen;
-import com.example.adviewer.view.SplashScreen;
 
 public class Authentication extends AppCompatActivity {
     @Override

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.adviewer">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,23 +10,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1430109249410982~6819005046"/>
-        <activity android:name=".model.Authentication">
+        <receiver android:name=".model.NotificationBroadcastReceiver"  android:exported="true">
+            <intent-filter>
+                <!-- The actions you wish to listen to, below is an example -->
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <activity android:name=".view.SplashScreen"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.SplashScreen"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity android:name=".view.SettingsScreen"
-            android:label="@string/settings">
-        </activity>
-        <activity android:name=".view.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".view.SignUpScreen"
@@ -36,6 +39,10 @@
         </activity>
         <activity android:name=".view.HomeScreen"
             android:label="@string/home">
+        </activity>
+        <activity
+            android:name=".view.AdsHistory"
+            android:label="Ads History" >
         </activity>
     </application>
 

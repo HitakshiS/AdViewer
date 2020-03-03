@@ -58,5 +58,20 @@
     <string name="sign_up">" साइन अप करें"</string>
     <string name="signup_title_text">निम्नलिखित विवरण भरें</string>
     <string name="welcome_main">" स्वागत हे"</string>
+    <string name="interstitial_ads_text">इंटरस्टीशियल विज्ञापन देखे गए:</string>
+    <string name="reward_ad_duration_txt">अंतिम इनाम विज्ञापन अवधि देखी गई:</string>
+    <string name="reward_ads_text">पुरस्कृत विज्ञापन देखे गए:</string>
+    <string name="zero_sec_text">" 0 सेकंड"</string>
+    <string name="zero_text">0</string>
+    <string name="ad_error_general">विज्ञापन पुनः लोड करने में विफल रहा।</string>
+    <string name="ad_network_error">" नेटवर्क कनेक्टिविटी के कारण विज्ञापन अनुरोध असफल रहा।"</string>
+    <string name="invalid_id_error">" विज्ञापन अनुरोध अमान्य था; उदाहरण के लिए, विज्ञापन इकाई आईडी गलत थी।"</string>
+    <string name="lack_of_inventory_error">विज्ञापन अनुरोध सफल रहा, लेकिन विज्ञापन सूची न होने के कारण कोई विज्ञापन नहीं लौटाया गया।</string>
+    <string name="server_error">विज्ञापन सर्वर से एक अमान्य प्रतिक्रिया प्राप्त हुई।</string>
+    <string name="interstitial_ad_loaded">" इंटरस्टीशियल विज्ञापन लोड किया गया"</string>
+    <string name="reward_ad_failed_error">पुरस्कृत विज्ञापन दिखाने में विफल</string>
+    <string name="reward_ad_loaded">" पुरस्कृत विज्ञापन लोड किया गया"</string>
+    <string name="interstitial_ad_error">" विज्ञापन लोड नहीं हुआ। कृपया पुन: प्रयास करें।"</string>
+    <string name="ads_select_text">" वह विज्ञापन चुनें जिसे आप देखना चाहते हैं"</string>
 
 </resources>

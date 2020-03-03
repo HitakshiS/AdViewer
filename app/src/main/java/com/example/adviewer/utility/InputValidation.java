@@ -1,4 +1,4 @@
-package com.example.adviewer.model;
+package com.example.adviewer.utility;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,8 +22,6 @@ public class InputValidation {
             } else {
                 return true;
             }
-
-
         }
 
         public boolean isInputEditTextEmail(EditText textInputEditText) {
@@ -36,6 +34,11 @@ public class InputValidation {
             }
 
         }
+
+    public boolean isInputEditTextEmail(String value) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return value.matches(regex);
+    }
 
         public boolean isInputEditTextMatches(EditText textInputEditText1, EditText textInputEditText2) {
             String value1 = textInputEditText1.getText().toString().trim();

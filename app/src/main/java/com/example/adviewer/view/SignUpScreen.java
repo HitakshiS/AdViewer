@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -13,13 +14,14 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.adviewer.R;
-import com.example.adviewer.model.InputValidation;
-import com.example.adviewer.model.User;
-import com.example.adviewer.model.UserDatabase;
+import com.example.adviewer.databinding.SignupScreenBinding;
+import com.example.adviewer.viewModel.ViewModelListener;
+import com.example.adviewer.viewModel.SignUpViewModel;
 
-public class SignUpScreen extends AppCompatActivity implements View.OnClickListener {
+public class SignUpScreen extends AppCompatActivity implements ViewModelListener {
 
     private final AppCompatActivity activity = SignUpScreen.this;
 
@@ -27,94 +29,47 @@ public class SignUpScreen extends AppCompatActivity implements View.OnClickListe
     private EditText textInputEditTextEmail;
     private EditText textInputEditTextPassword;
 
-    private Button appCompatButtonRegister;
-    private Button appCompatTextViewLoginLink;
-
-    private InputValidation inputValidation;
-    private UserDatabase databaseHelper;
-    private User user;
+    SignupScreenBinding binding;
+    SignUpViewModel signUpViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup_screen);
+        binding = DataBindingUtil.setContentView(this, R.layout.signup_screen);
+        signUpViewModel = new SignUpViewModel(this);
+        binding.setViewModel(signUpViewModel);
         getSupportActionBar().hide();
-
         initViews();
-        initListeners();
-        initObjects();
     }
 
     private void initViews() {
 
-        textInputEditTextName = findViewById(R.id.name);
-        textInputEditTextEmail =  findViewById(R.id.email);
-        textInputEditTextPassword =  findViewById(R.id.password);
-        appCompatButtonRegister =  findViewById(R.id.btnRegister);
-        appCompatTextViewLoginLink =  findViewById(R.id.btnLinkToLoginScreen);
+        textInputEditTextName = binding.name;
+        signUpViewModel.setName(textInputEditTextName.getText().toString());
 
-    }
+        textInputEditTextEmail = binding.email;
+        signUpViewModel.setEmail(textInputEditTextName.getText().toString());
 
-    private void initListeners() {
-        appCompatButtonRegister.setOnClickListener(this);
-        appCompatTextViewLoginLink.setOnClickListener(this);
+        textInputEditTextPassword = binding.password;
+        signUpViewModel.setPassword(textInputEditTextName.getText().toString());
 
-    }
+        final Button appCompatButtonRegister = binding.btnRegister;
+        appCompatButtonRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signUpViewModel.onRegisterClick(appCompatButtonRegister);
+            }
+        });
 
-    private void initObjects() {
-        inputValidation = new InputValidation(activity);
-        databaseHelper = new UserDatabase(activity);
-        user = new User();
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.btnRegister:
-                postDataToSQLite();
-                break;
-
-            case R.id.btnLinkToLoginScreen:
+        Button appCompatTextViewLoginLink = findViewById(R.id.btnLinkToLoginScreen);
+        appCompatTextViewLoginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent signInIntent = new Intent(SignUpScreen.this, SignInScreen.class);
                 startActivity(signInIntent);
-                break;
-        }
-    }
 
-    private void postDataToSQLite() {
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextName)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_name), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextEmail)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_email), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!inputValidation.isInputEditTextEmail(textInputEditTextEmail)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_invalid_email), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword)) {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_message_password), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim())) {
-
-            user.setName(textInputEditTextName.getText().toString().trim());
-            user.setEmail(textInputEditTextEmail.getText().toString().trim());
-            user.setPassword(textInputEditTextPassword.getText().toString().trim());
-
-            databaseHelper.addUser(user);
-
-            showConfimationDialog();
-            emptyInputEditText();
-
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.error_email_exists), Toast.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 
     private void showConfimationDialog() {
@@ -134,7 +89,7 @@ public class SignUpScreen extends AppCompatActivity implements View.OnClickListe
                 .setCancelable(true)
                 .setPositiveButton(getString(R.string.ok_text),
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 Intent signInIntent = new Intent(SignUpScreen.this, SignInScreen.class);
                                 startActivity(signInIntent);
                             }
@@ -148,4 +103,16 @@ public class SignUpScreen extends AppCompatActivity implements View.OnClickListe
         textInputEditTextEmail.setText(null);
         textInputEditTextPassword.setText(null);
     }
+
+    @Override
+    public void onSuccess() {
+        showConfimationDialog();
+        emptyInputEditText();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
 }
