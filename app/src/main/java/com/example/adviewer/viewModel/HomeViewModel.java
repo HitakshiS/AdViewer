@@ -3,8 +3,6 @@ package com.example.adviewer.viewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.example.adviewer.model.AdsStats;
 import com.example.adviewer.model.AdsStatsDatabase;
 import com.example.adviewer.model.User;
 import com.example.adviewer.utility.AppUtilities;
-import com.example.adviewer.view.SplashScreen;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -30,9 +27,6 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class HomeViewModel extends BaseObservable {
 
@@ -55,6 +49,8 @@ public class HomeViewModel extends BaseObservable {
     private String interstitialDayCount = "0";
     private String interstitialMonthCount = "0";
     private String rewardDayCount = "0";
+    private String rewardMonthCount = "0";
+
 
     @Bindable
     public String getInterstitialDayCount() {
@@ -100,7 +96,7 @@ public class HomeViewModel extends BaseObservable {
         notifyPropertyChanged(BR.rewardMonthCount);
     }
 
-    private String rewardMonthCount = "0";
+
 
     @Bindable
     public String getInterstitialCount() {
@@ -150,21 +146,36 @@ public class HomeViewModel extends BaseObservable {
             }
         });
         setInterstitialAd();
+        startInterstitial();
         setRewardedAd();
+        showStats();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String numOfInterstitialAds = preferences.getString("rewardAds", "0");
         newReward = adsStats.getNumberOfRewardAdsWatched() + Integer.valueOf(numOfInterstitialAds);
 
-        Date date= new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DATE);
-        preferences.edit().putInt("currentMonth", month).apply();
-        preferences.edit().putInt("currentDate", day).apply();
+    }
 
+    public void showStats() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int initialDate = preferences.getInt("initialDay", 0);
+        int initialMonth = preferences.getInt("initialMonth", 0);
 
+        if (appUtilities.currentDate() != initialDate || (appUtilities.currentDate() == initialDate && appUtilities.currentMonth() != initialMonth )) {
+            preferences.edit().putInt("initialDay", appUtilities.currentDate()).apply();
+            preferences.edit().putString("rewardAdsDay", "0").apply();
+            preferences.edit().putString("interAdsDay", "0").apply();
+            adsStats.setNumberOfRewardAdsDay(0);
+            adsStats.setNumberOfInterstitialAdsDay(0);
+        }
+
+        if (appUtilities.currentMonth() != initialMonth) {
+            preferences.edit().putInt("initialMonth", appUtilities.currentMonth()).apply();
+            preferences.edit().putString("rewardAdsMonth", "0").apply();
+            preferences.edit().putString("interAdsMonth", "0").apply();
+            adsStats.setNumberOfRewardAdsMonth(0);
+            adsStats.setNumberOfInterstitialAdsMonth(0);
+        }
     }
 
     public String getTitle() {
@@ -195,12 +206,31 @@ public class HomeViewModel extends BaseObservable {
     private void showInterstitial() {
         if (interstitialAd != null && interstitialAd.isLoaded()) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String rewardDuration = preferences.getString("rewardAdDuration", "0");
+
             interstitialAd.show();
+
+            adsStats.addNumberOfInterstitialAdsDay();
+            adsStats.addNumberOfInterstitialAdsMonth();
             adsStats.addNumberOfInterstitialAdsWatched();
-            preferences.edit().putString("interstitialAds", String.valueOf(adsStats.getNumberOfInterstitialAdsWatched())).apply();
-            setInterstitialCount(String.valueOf(adsStats.getNumberOfInterstitialAdsWatched()));
-            adsStatsDatabase.addAdsData(adsStats);
+
+            String interstTotal = preferences.getString("interstitialAds", "0");
+            String interstDay = preferences.getString("interAdsDay", "0");
+            String interstMonth = preferences.getString("interAdsMonth", "0");
+
+            int intTotal = 1 + Integer.valueOf(interstTotal);
+            int intDay = 1 + Integer.valueOf(interstDay);
+            int intMonth = 1 + Integer.valueOf(interstMonth);
+
+            preferences.edit().putString("interAdsDay", String.valueOf(intDay)).apply();
+            preferences.edit().putString("interAdsMonth", String.valueOf(intMonth)).apply();
+            preferences.edit().putString("interstitialAds", String.valueOf(intTotal)).apply();
+
+            setInterstitialCount(String.valueOf(intTotal));
+            adsStats.setNumberOfInterstitialAdsWatched(intTotal);
+            setInterstitialDayCount(String.valueOf(intDay));
+            adsStats.setNumberOfInterstitialAdsDay(intDay);
+            setInterstitialMonthCount(String.valueOf(intMonth));
+            adsStats.setNumberOfInterstitialAdsMonth(intMonth);
         } else {
             Toast.makeText(context, R.string.interstitial_ad_error, Toast.LENGTH_SHORT).show();
             startInterstitial();
@@ -290,30 +320,31 @@ public class HomeViewModel extends BaseObservable {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                             addOpened = System.currentTimeMillis();
                             adsStats.addNumberOfRewardAdsWatched();
-                            //Toast.makeText(context, "onRewardedAdOpened", Toast.LENGTH_SHORT).show();
-                            int currentDate = preferences.getInt("currentDate", 0);
-                            int initialDate = preferences.getInt("initialDay", 0);
-                            int currentMonth = preferences.getInt("currentMonth", 0);
-                            int initialMonth = preferences.getInt("initialMonth", 0);
-                            if(currentDate != initialDate){
-                                preferences.edit().putInt("initialDay", currentDate).apply();
-                                adsStats.setNumberOfRewardAdsDay(1);
-                            }
-                            else{
-                                adsStats.addNumberOfRewardAdsDay();
-                            }
-                            if(currentMonth != initialMonth){
-                                preferences.edit().putInt("initialMonth", currentDate).apply();
-                                adsStats.setNumberOfRewardAdsMonth(1);
-                            }
-                            else{
-                                adsStats.addNumberOfRewardAdsMonth();
-                            }
-                            adsStatsDatabase.addAdsData(adsStats);
 
-                            preferences.edit().putString("rewardAds", String.valueOf(adsStats.getNumberOfRewardAdsWatched())).apply();
-                            setRewardCount(String.valueOf(newReward));
-                            newReward = 0;
+
+                            adsStats.addNumberOfRewardAdsMonth();
+                            adsStats.addNumberOfRewardAdsDay();
+
+                            String rewardTotal = preferences.getString("rewardAds", "0");
+                            String rewardDay = preferences.getString("rewardAdsDay", "0");
+                            String rewardMonth = preferences.getString("rewardAdsMonth", "0");
+
+                            int rwdTotal = 1 + Integer.valueOf(rewardTotal);
+                            int rwdDay = 1 + Integer.valueOf(rewardDay);
+                            int rwdMonth = 1 + Integer.valueOf(rewardMonth);
+
+                            preferences.edit().putString("rewardAdsDay", String.valueOf(rwdDay)).apply();
+                            Log.e("rewardAdsDay reward: ", String.valueOf(rwdDay));
+                            preferences.edit().putString("rewardAdsMonth", String.valueOf(rwdMonth)).apply();
+                            Log.e("rewardAdsMonth reward: ", String.valueOf(rwdMonth));
+                            preferences.edit().putString("rewardAds", String.valueOf(rwdTotal)).apply();
+
+                            setRewardCount(String.valueOf(rwdTotal));
+                            adsStats.setNumberOfRewardAdsWatched(rwdTotal);
+                            setRewardDayCount(String.valueOf(rwdDay));
+                            adsStats.setNumberOfRewardAdsDay(rwdDay);
+                            setRewardMonthCount(String.valueOf(rwdMonth));
+                            adsStats.setNumberOfRewardAdsMonth(rwdMonth);
                         }
 
                         @Override

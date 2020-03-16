@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import androidx.lifecycle.ViewModel;
 
+import com.example.adviewer.R;
 import com.example.adviewer.model.UserDatabase;
 import com.example.adviewer.view.SignUpScreen;
 
@@ -50,19 +51,25 @@ public class LoginViewModel extends ViewModel {
         databaseHelper = new UserDatabase(context);
         Log.e("onLoginButtonClick: ", "1");
         if (email.isEmpty()) {
-            viewModelListener.onFailure("Enter Email");
+            viewModelListener.onFailure(context.getString(R.string.error_message_email));
         } else if (password.isEmpty()) {
-            viewModelListener.onFailure("Enter password");
+            viewModelListener.onFailure(context.getString(R.string.error_message_password));
         } else if (!isInputEditTextEmail(email)) {
-            viewModelListener.onFailure("Invalid email entered");
+            viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (databaseHelper.checkUser(email, password)) {
             viewModelListener.onSuccess();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             isLoggedIn = true;
             prefs.edit().putBoolean("Islogin", isLoggedIn).apply();
+            prefs.edit().putString("rewardAdsMonth", "0").apply();
+            prefs.edit().putString("interAdsMonth", "0").apply();
+            prefs.edit().putString("rewardAdsDay", "0").apply();
+            prefs.edit().putString("interAdsDay", "0").apply();
+            prefs.edit().putString("interstitialAds", "0").apply();
+            prefs.edit().putString("rewardAds", "0").apply();
             //prefs.edit().putString("userEmail", email).commit();
         } else {
-            viewModelListener.onFailure("You are not registered");
+            viewModelListener.onFailure(context.getString(R.string.login_fail_error));
         }
     }
 

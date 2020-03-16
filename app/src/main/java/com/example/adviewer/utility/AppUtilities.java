@@ -10,6 +10,9 @@ import android.os.Build;
 
 import com.example.adviewer.BuildConfig;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class AppUtilities {
     private Context context;
 
@@ -58,6 +61,23 @@ public class AppUtilities {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public int currentDate() {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int day = cal.get(Calendar.DATE);
+        return day;
+    }
+
+    public int currentMonth() {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+        return month;
     }
 
 }

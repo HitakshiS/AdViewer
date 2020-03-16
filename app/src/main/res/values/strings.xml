@@ -18,7 +18,7 @@
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="text_login">Login</string>
     <string name="text_register">Register</string>
-    <string name="error_message_name">Enter Full Name</string>
+    <string name="error_message_name">Enter Name</string>
     <string name="error_message_email">Enter Email</string>
     <string name="error_message_invalid_email">Enter Valid Email</string>
     <string name="error_message_age">Enter Age</string>
@@ -69,15 +69,18 @@
     <string name="server_error">An invalid response was received from the ad server.</string>
     <string name="invalid_id_error">The ad request was invalid; for instance, the ad unit ID was incorrect.</string>
     <string name="ad_error_general">Ad failed to load please retry.</string>
-    <string name="interstitial_ad_error">Ad did not load. Please retry.</string>
+    <string name="interstitial_ad_error">Ad did not load. Please retry after 2 seconds.</string>
     <string name="interstitial_ad_loaded">Interstitial Ad Loaded</string>
     <string name="reward_ad_loaded">Rewarded ad loaded</string>
     <string name="reward_ad_failed_error">Failed to show rewarded ad</string>
     <string name="ads_select_text">Select the ad you want to watch</string>
-    <string name="interstitial_ads_in_a_day">Day: </string>
-    <string name="interstitial_ads_in_a_month">Month: </string>
-    <string name="reward_ads_in_a_day">Day: </string>
-    <string name="reward_ads_in_a_month">Month: </string>
+    <string name="interstitial_ads_in_a_day">Daily: </string>
+    <string name="interstitial_ads_in_a_month">Monthly: </string>
+    <string name="reward_ads_in_a_day">Daily: </string>
+    <string name="reward_ads_in_a_month">Monthly: </string>
+    <string name="login_fail_error">You are either unregistered or entering a wrong password</string>
+    <string name="interstial_ads_home_text">Interstial Ads</string>
+    <string name="reward_ads_home_text">Reward Ads</string>
 </resources>
 
 

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
 import androidx.lifecycle.ViewModel;
+
+import com.example.adviewer.R;
 import com.example.adviewer.model.User;
 import com.example.adviewer.model.UserDatabase;
 import com.example.adviewer.utility.InputValidation;
@@ -61,14 +63,14 @@ public class SignUpViewModel extends ViewModel {
     public void onRegisterClick(View view) {
         databaseHelper = new UserDatabase(context);
         if(name.isEmpty()){
-            viewModelListener.onFailure("Enter name");
+            viewModelListener.onFailure(context.getString(R.string.error_message_name));
         }
         else if (email.isEmpty()) {
-            viewModelListener.onFailure("Enter Email");
+            viewModelListener.onFailure(context.getString(R.string.error_message_email));
         } else if (password.isEmpty()) {
-            viewModelListener.onFailure("Enter password");
+            viewModelListener.onFailure(context.getString(R.string.error_message_password));
         } else if (!inputValidation.isInputEditTextEmail(email)) {
-            viewModelListener.onFailure("Invalid email entered");
+            viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (!databaseHelper.checkUser(email)) {
             user.setName(name);
             user.setEmail(email);
@@ -85,7 +87,7 @@ public class SignUpViewModel extends ViewModel {
             viewModelListener.onSuccess();
         }
         else{
-            viewModelListener.onFailure("Email already exists");
+            viewModelListener.onFailure(context.getString(R.string.error_email_exists));
         }
     }
 

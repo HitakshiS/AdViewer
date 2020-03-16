@@ -45,7 +45,7 @@
     <string name="ads_count_text">" आज आप जितने विज्ञापन देखना चाहते हैं"</string>
     <string name="coins_initial_value">" सिक्के: 0"</string>
     <string name="home">" मुख्य स्क्रीन "</string>
-    <string name="interstitial_ad_btn">" बीचवाला विज्ञापन"</string>
+    <string name="interstitial_ad_btn">" इंटरस्टीशियल विज्ञापन"</string>
     <string name="interval_of_notifications">" मध्यान्तर"</string>
     <string name="main_title_first">" विज्ञापन देखें"</string>
     <string name="main_title_second">" पुरस्कार पाने के लिए"</string>
@@ -58,9 +58,9 @@
     <string name="sign_up">" साइन अप करें"</string>
     <string name="signup_title_text">निम्नलिखित विवरण भरें</string>
     <string name="welcome_main">" स्वागत हे"</string>
-    <string name="interstitial_ads_text">इंटरस्टीशियल विज्ञापन देखे गए:</string>
+    <string name="interstitial_ads_text">" कुल:"</string>
     <string name="reward_ad_duration_txt">अंतिम इनाम विज्ञापन अवधि देखी गई:</string>
-    <string name="reward_ads_text">पुरस्कृत विज्ञापन देखे गए:</string>
+    <string name="reward_ads_text">कुल:</string>
     <string name="zero_sec_text">" 0 सेकंड"</string>
     <string name="zero_text">0</string>
     <string name="ad_error_general">विज्ञापन पुनः लोड करने में विफल रहा।</string>
@@ -73,5 +73,12 @@
     <string name="reward_ad_loaded">" पुरस्कृत विज्ञापन लोड किया गया"</string>
     <string name="interstitial_ad_error">" विज्ञापन लोड नहीं हुआ। कृपया पुन: प्रयास करें।"</string>
     <string name="ads_select_text">" वह विज्ञापन चुनें जिसे आप देखना चाहते हैं"</string>
+    <string name="interstial_ads_home_text">" इंटरस्टीशियल विज्ञापन"</string>
+    <string name="login_fail_error">आप या तो अपंजीकृत हैं या गलत पासवर्ड दर्ज कर रहे हैं</string>
+    <string name="reward_ads_in_a_month">" महीने के:"</string>
+    <string name="reward_ads_in_a_day">" रोज:"</string>
+    <string name="reward_ads_home_text">" पुरस्कृत विज्ञापन"</string>
+    <string name="interstitial_ads_in_a_month">" महीने के:"</string>
+    <string name="interstitial_ads_in_a_day">" रोज:"</string>
 
 </resources>

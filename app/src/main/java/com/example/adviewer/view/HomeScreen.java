@@ -41,6 +41,10 @@ public class HomeScreen extends AppCompatActivity {
         String numOfInterstitialAds = preferences.getString("interstitialAds", "0");
         String numOfRewardAds = preferences.getString("rewardAds", "0");
         String rewardAdDuration = preferences.getString("rewardAdDuration", "0 sec");
+        String interDayCount = preferences.getString("interAdsDay", "0");
+        String interMonthCount = preferences.getString("interAdsMonth", "0");
+        String rewardDayCount = preferences.getString("rewardAdsDay", "0");
+        String rewardMonthCount = preferences.getString("rewardAdsMonth", "0");
 
         TextView title = binding.gameTitle;
         homeModel.setTitle(getString(R.string.ads_select_text));
@@ -87,15 +91,27 @@ public class HomeScreen extends AppCompatActivity {
         });
 
         TextView interDay = binding.interstitialDayCountText;
+        if (!interDayCount.equals("0")) {
+            interDay.setText(interDayCount);
+        }
         homeModel.setInterstitialDayCount(interDay.getText().toString());
 
         TextView interMonth = binding.interstitialMonthCountText;
+        if (!interMonthCount.equals("0")) {
+            interMonth.setText(interMonthCount);
+        }
         homeModel.setInterstitialMonthCount(interMonth.getText().toString());
 
         TextView rewardDay = binding.rewardDayCountText;
+        if (!rewardDayCount.equals("0")) {
+            rewardDay.setText(rewardDayCount);
+        }
         homeModel.setRewardDayCount(rewardDay.getText().toString());
 
         TextView rewardMonth = binding.rewardMonthCountText;
+        if (!rewardMonthCount.equals("0")) {
+            rewardMonth.setText(rewardMonthCount);
+        }
         homeModel.setRewardMonthCount(rewardMonth.getText().toString());
 
 
@@ -158,6 +174,12 @@ public class HomeScreen extends AppCompatActivity {
             return true;
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeModel.showStats();
     }
 }
 

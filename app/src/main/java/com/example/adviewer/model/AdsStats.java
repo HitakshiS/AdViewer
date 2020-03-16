@@ -92,18 +92,18 @@ public class AdsStats {
     }
 
     public void addNumberOfRewardAdsDay() {
-        this.numberOfRewardAdsWatched += 1;
+        this.numberOfRewardAdsDay += 1;
     }
 
     public void addNumberOfInterstitialAdsDay() {
-        this.numberOfInterstitialAdsWatched += 1;
+        this.numberOfInterstitialAdsDay += 1;
     }
 
     public void addNumberOfRewardAdsMonth() {
-        this.numberOfRewardAdsWatched += 1;
+        this.numberOfRewardAdsMonth += 1;
     }
 
     public void addNumberOfInterstitialAdsMonth() {
-        this.numberOfInterstitialAdsWatched += 1;
+        this.numberOfInterstitialAdsMonth += 1;
     }
 }
