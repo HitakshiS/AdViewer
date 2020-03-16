@@ -3,8 +3,6 @@ package com.example.adviewer.viewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,8 +12,6 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.adviewer.R;
 import com.example.adviewer.model.AdsStats;
-import com.example.adviewer.model.AdsStatsDatabase;
-import com.example.adviewer.model.User;
 import com.example.adviewer.utility.AppUtilities;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -38,13 +34,10 @@ public class HomeViewModel extends BaseObservable {
     private InterstitialAd interstitialAd;
     private final Context context;
     private AdsStats adsStats = new AdsStats();
-    User user = new User();
-    private AdsStatsDatabase adsStatsDatabase;
     private String interstitialCount = "0";
     private String rewardCount = "0";
     private String durationCount = "0 sec";
     private static long addOpened, addClosed;
-    private int newReward;
     private AppUtilities appUtilities;
     private String interstitialDayCount = "0";
     private String interstitialMonthCount = "0";
@@ -135,7 +128,6 @@ public class HomeViewModel extends BaseObservable {
 
     public HomeViewModel(Context context) {
         this.context = context;
-        adsStatsDatabase = new AdsStatsDatabase(context);
         if (context instanceof ViewModelListener) {
             viewModelListener = (ViewModelListener) context;
         }
@@ -148,31 +140,29 @@ public class HomeViewModel extends BaseObservable {
         setInterstitialAd();
         startInterstitial();
         setRewardedAd();
+        startReward();
         showStats();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String numOfInterstitialAds = preferences.getString("rewardAds", "0");
-        newReward = adsStats.getNumberOfRewardAdsWatched() + Integer.valueOf(numOfInterstitialAds);
 
     }
 
     public void showStats() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int initialDate = preferences.getInt("initialDay", 0);
-        int initialMonth = preferences.getInt("initialMonth", 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int initialDate = sharedPreferences.getInt("initialDay", 0);
+        int initialMonth = sharedPreferences.getInt("initialMonth", 0);
 
         if (appUtilities.currentDate() != initialDate || (appUtilities.currentDate() == initialDate && appUtilities.currentMonth() != initialMonth )) {
-            preferences.edit().putInt("initialDay", appUtilities.currentDate()).apply();
-            preferences.edit().putString("rewardAdsDay", "0").apply();
-            preferences.edit().putString("interAdsDay", "0").apply();
+            editor.putInt("initialDay", appUtilities.currentDate()).apply();
+            editor.putString("rewardAdsDay", "0").apply();
+            editor.putString("interAdsDay", "0").apply();
             adsStats.setNumberOfRewardAdsDay(0);
             adsStats.setNumberOfInterstitialAdsDay(0);
         }
 
         if (appUtilities.currentMonth() != initialMonth) {
-            preferences.edit().putInt("initialMonth", appUtilities.currentMonth()).apply();
-            preferences.edit().putString("rewardAdsMonth", "0").apply();
-            preferences.edit().putString("interAdsMonth", "0").apply();
+            editor.putInt("initialMonth", appUtilities.currentMonth()).apply();
+            editor.putString("rewardAdsMonth", "0").apply();
+            editor.putString("interAdsMonth", "0").apply();
             adsStats.setNumberOfRewardAdsMonth(0);
             adsStats.setNumberOfInterstitialAdsMonth(0);
         }
@@ -205,7 +195,8 @@ public class HomeViewModel extends BaseObservable {
 
     private void showInterstitial() {
         if (interstitialAd != null && interstitialAd.isLoaded()) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
             interstitialAd.show();
 
@@ -213,17 +204,17 @@ public class HomeViewModel extends BaseObservable {
             adsStats.addNumberOfInterstitialAdsMonth();
             adsStats.addNumberOfInterstitialAdsWatched();
 
-            String interstTotal = preferences.getString("interstitialAds", "0");
-            String interstDay = preferences.getString("interAdsDay", "0");
-            String interstMonth = preferences.getString("interAdsMonth", "0");
+            String interstTotal = sharedPreferences.getString("interstitialAds", "0");
+            String interstDay = sharedPreferences.getString("interAdsDay", "0");
+            String interstMonth = sharedPreferences.getString("interAdsMonth", "0");
 
             int intTotal = 1 + Integer.valueOf(interstTotal);
             int intDay = 1 + Integer.valueOf(interstDay);
             int intMonth = 1 + Integer.valueOf(interstMonth);
 
-            preferences.edit().putString("interAdsDay", String.valueOf(intDay)).apply();
-            preferences.edit().putString("interAdsMonth", String.valueOf(intMonth)).apply();
-            preferences.edit().putString("interstitialAds", String.valueOf(intTotal)).apply();
+            editor.putString("interAdsDay", String.valueOf(intDay)).apply();
+            editor.putString("interAdsMonth", String.valueOf(intMonth)).apply();
+            editor.putString("interstitialAds", String.valueOf(intTotal)).apply();
 
             setInterstitialCount(String.valueOf(intTotal));
             adsStats.setNumberOfInterstitialAdsWatched(intTotal);
@@ -243,7 +234,7 @@ public class HomeViewModel extends BaseObservable {
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                Toast.makeText(context, R.string.interstitial_ad_loaded, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.interstitial_ad_loaded, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -284,7 +275,7 @@ public class HomeViewModel extends BaseObservable {
                     new RewardedAdLoadCallback() {
                         @Override
                         public void onRewardedAdLoaded() {
-                            Toast.makeText(context, R.string.reward_ad_loaded, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, R.string.reward_ad_loaded, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -317,7 +308,8 @@ public class HomeViewModel extends BaseObservable {
                     new RewardedAdCallback() {
                         @Override
                         public void onRewardedAdOpened() {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                            SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             addOpened = System.currentTimeMillis();
                             adsStats.addNumberOfRewardAdsWatched();
 
@@ -325,19 +317,17 @@ public class HomeViewModel extends BaseObservable {
                             adsStats.addNumberOfRewardAdsMonth();
                             adsStats.addNumberOfRewardAdsDay();
 
-                            String rewardTotal = preferences.getString("rewardAds", "0");
-                            String rewardDay = preferences.getString("rewardAdsDay", "0");
-                            String rewardMonth = preferences.getString("rewardAdsMonth", "0");
+                            String rewardTotal = sharedPreferences.getString("rewardAds", "0");
+                            String rewardDay = sharedPreferences.getString("rewardAdsDay", "0");
+                            String rewardMonth = sharedPreferences.getString("rewardAdsMonth", "0");
 
                             int rwdTotal = 1 + Integer.valueOf(rewardTotal);
                             int rwdDay = 1 + Integer.valueOf(rewardDay);
                             int rwdMonth = 1 + Integer.valueOf(rewardMonth);
 
-                            preferences.edit().putString("rewardAdsDay", String.valueOf(rwdDay)).apply();
-                            Log.e("rewardAdsDay reward: ", String.valueOf(rwdDay));
-                            preferences.edit().putString("rewardAdsMonth", String.valueOf(rwdMonth)).apply();
-                            Log.e("rewardAdsMonth reward: ", String.valueOf(rwdMonth));
-                            preferences.edit().putString("rewardAds", String.valueOf(rwdTotal)).apply();
+                            editor.putString("rewardAdsDay", String.valueOf(rwdDay)).apply();
+                            editor.putString("rewardAdsMonth", String.valueOf(rwdMonth)).apply();
+                            editor.putString("rewardAds", String.valueOf(rwdTotal)).apply();
 
                             setRewardCount(String.valueOf(rwdTotal));
                             adsStats.setNumberOfRewardAdsWatched(rwdTotal);
@@ -349,16 +339,16 @@ public class HomeViewModel extends BaseObservable {
 
                         @Override
                         public void onRewardedAdClosed() {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                            String rewardDuration = preferences.getString("rewardAdDuration", "0");
+                            SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            String rewardDuration = sharedPreferences.getString("rewardAdDuration", "0");
                             addClosed = System.currentTimeMillis();
-                            //Toast.makeText(context, "onRewardedAdClosed", Toast.LENGTH_SHORT).show();
                             setRewardedAd();
                             long duration = addClosed - addOpened;
                             duration = duration / 1000;
                             duration = duration + Long.valueOf(rewardDuration);
                             setDurationCount(String.valueOf(duration) + " sec");
-                            preferences.edit().putString("rewardAdDuration", String.valueOf(duration)).apply();
+                            editor.putString("rewardAdDuration", String.valueOf(duration)).apply();
                         }
 
                         @Override

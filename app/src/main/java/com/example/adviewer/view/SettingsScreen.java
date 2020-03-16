@@ -1,9 +1,9 @@
 package com.example.adviewer.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -35,17 +35,27 @@ public class SettingsScreen extends AppCompatActivity implements AdapterView.OnI
         settingViewModel = new SettingViewModel(getResources().getStringArray(R.array.interval), this);
         binding.setSetting(settingViewModel);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int selectedPosition = preferences.getInt("intervalPosition", 0);
-        String numOfAdSelected = preferences.getString("numOfAdCount", "0");
+        SharedPreferences sharedPreferences = getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
+        int selectedPosition = sharedPreferences.getInt("intervalPosition", 0);
+        String numOfAdSelected = sharedPreferences.getString("numOfAdCount", "0");
 
         spin = binding.intervalSpinner;
         spin.setOnItemSelectedListener(this);
         settingViewModel.setSelectedPosition(selectedPosition);
 
         numberOfAds = binding.numberOfAdsText;
-        if(!numOfAdSelected.equals("0")){
+        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    numberOfAds.setSelection(numberOfAds.getText().length());
+                }
+            }
+        };
+
+        if (!numOfAdSelected.equals("0")) {
             numberOfAds.setText(numOfAdSelected);
+            numberOfAds.setOnFocusChangeListener(onFocusChangeListener);
         }
         int textLength = numberOfAds.getText().length();
         numberOfAds.setSelection(textLength, textLength);

@@ -1,20 +1,18 @@
 package com.example.adviewer.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adviewer.R;
 
-import java.util.Calendar;
-import java.util.Date;
 
 public class SplashScreen extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 5000;
+    private static int SPLASH_TIME_OUT = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +25,8 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 Intent activityIntent;
 
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SplashScreen.this);
-                Boolean Islogin = preferences.getBoolean("Islogin", false);
+                SharedPreferences sharedPreferences = getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+                Boolean Islogin = sharedPreferences.getBoolean("Islogin", false);
 
                 if (Islogin) {
                     activityIntent = new Intent(SplashScreen.this, HomeScreen.class);

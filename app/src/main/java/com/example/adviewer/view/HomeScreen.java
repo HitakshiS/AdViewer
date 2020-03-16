@@ -1,9 +1,9 @@
 package com.example.adviewer.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,14 +37,14 @@ public class HomeScreen extends AppCompatActivity {
         homeModel = new HomeViewModel(HomeScreen.this);
         binding.setViewModel(homeModel);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String numOfInterstitialAds = preferences.getString("interstitialAds", "0");
-        String numOfRewardAds = preferences.getString("rewardAds", "0");
-        String rewardAdDuration = preferences.getString("rewardAdDuration", "0 sec");
-        String interDayCount = preferences.getString("interAdsDay", "0");
-        String interMonthCount = preferences.getString("interAdsMonth", "0");
-        String rewardDayCount = preferences.getString("rewardAdsDay", "0");
-        String rewardMonthCount = preferences.getString("rewardAdsMonth", "0");
+        SharedPreferences sharedPreferences = getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+        String numOfInterstitialAds = sharedPreferences.getString("interstitialAds", "0");
+        String numOfRewardAds = sharedPreferences.getString("rewardAds", "0");
+        String rewardAdDuration = sharedPreferences.getString("rewardAdDuration", "0 sec");
+        String interDayCount = sharedPreferences.getString("interAdsDay", "0");
+        String interMonthCount = sharedPreferences.getString("interAdsMonth", "0");
+        String rewardDayCount = sharedPreferences.getString("rewardAdsDay", "0");
+        String rewardMonthCount = sharedPreferences.getString("rewardAdsMonth", "0");
 
         TextView title = binding.gameTitle;
         homeModel.setTitle(getString(R.string.ads_select_text));
@@ -137,8 +137,9 @@ public class HomeScreen extends AppCompatActivity {
                         break;
                     }
                     case R.id.logout: {
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(HomeScreen.this);
-                        prefs.edit().putBoolean("Islogin", false).apply();
+                        SharedPreferences logOutSharedPreferences = getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = logOutSharedPreferences.edit();
+                        editor.putBoolean("Islogin", false).apply();
                         Intent signInIntent = new Intent(HomeScreen.this, SignInScreen.class);
                         startActivity(signInIntent);
                         dl.closeDrawers();

@@ -3,7 +3,6 @@ package com.example.adviewer.viewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.View;
 import androidx.lifecycle.ViewModel;
 
@@ -69,7 +68,7 @@ public class SignUpViewModel extends ViewModel {
             viewModelListener.onFailure(context.getString(R.string.error_message_email));
         } else if (password.isEmpty()) {
             viewModelListener.onFailure(context.getString(R.string.error_message_password));
-        } else if (!inputValidation.isInputEditTextEmail(email)) {
+        } else if (inputValidation.isInputEditTextEmail(email)) {
             viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (!databaseHelper.checkUser(email)) {
             user.setName(name);
@@ -81,9 +80,11 @@ public class SignUpViewModel extends ViewModel {
             cal.setTime(date);
             int month = cal.get(Calendar.MONTH);
             int day = cal.get(Calendar.DATE);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            preferences.edit().putInt("initialMonth", month).apply();
-            preferences.edit().putInt("initialDay", day).apply();
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("initialMonth", month).apply();
+            editor.putInt("initialDay", day).apply();
             viewModelListener.onSuccess();
         }
         else{

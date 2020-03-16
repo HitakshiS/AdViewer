@@ -14,13 +14,15 @@ import androidx.core.app.NotificationCompat;
 import com.example.adviewer.R;
 import com.example.adviewer.view.HomeScreen;
 
+import java.util.Objects;
+
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        int alarmId = intent.getExtras().getInt("alarmId");
+        int alarmId = Objects.requireNonNull(intent.getExtras()).getInt("alarmId");
         int numOfNotification = intent.getExtras().getInt("repeatNumber");
         PendingIntent alarmIntent;
         alarmIntent = PendingIntent.getBroadcast(context, alarmId, new Intent(context, NotificationBroadcastReceiver.class),
@@ -34,6 +36,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         if (alarmCount == numOfNotification) {
             editor.putInt("alarmCount", 1).commit();
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            assert alarmManager != null;
             alarmManager.cancel(alarmIntent);
         }
     }
@@ -49,6 +52,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             NotificationChannel channel = new
                     NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+            assert manager != null;
             manager.createNotificationChannel(channel);
         }
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
@@ -57,6 +61,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.add_drawer_logo)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
+        assert manager != null;
         manager.notify(1, builder.build());
     }
 

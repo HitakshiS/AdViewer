@@ -15,7 +15,6 @@ import com.example.adviewer.viewModel.ViewModelListener;
 import com.example.adviewer.viewModel.LoginViewModel;
 
 public class SignInScreen extends AppCompatActivity implements View.OnClickListener, ViewModelListener {
-    private final AppCompatActivity activity = SignInScreen.this;
 
     private EditText textInputEditTextEmail;
     private EditText textInputEditTextPassword;

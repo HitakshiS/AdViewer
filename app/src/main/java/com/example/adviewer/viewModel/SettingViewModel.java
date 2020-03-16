@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
@@ -89,7 +88,8 @@ public class SettingViewModel extends BaseObservable {
     }
 
     public void onSettingsSaveClick(View view) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (numberOfAds.isEmpty()) {
             viewModelListener.onFailure("Please enter the number of times you want to watch the ads.");
         } else {
@@ -105,8 +105,8 @@ public class SettingViewModel extends BaseObservable {
                     delayMinutes = 60;
                 }
                 final long period = delayMinutes * 1000;
-                prefs.edit().putInt("intervalPosition", getSelectedPosition()).apply();
-                prefs.edit().putString("numOfAdCount", getNumberOfAds()).apply();
+                editor.putInt("intervalPosition", getSelectedPosition()).apply();
+                editor.putString("numOfAdCount", getNumberOfAds()).apply();
                 startAlarmBroadcastReceiver(context, period);
                 viewModelListener.onSuccess();
 
@@ -121,16 +121,16 @@ public class SettingViewModel extends BaseObservable {
     public void startAlarmBroadcastReceiver(Context context, long delay) {
         int alarmId = 0;
         int numOfAds = Integer.parseInt(numberOfAds);
-        Intent _intent = new Intent(context, NotificationBroadcastReceiver.class);
+        Intent broadcastIntent = new Intent(context, NotificationBroadcastReceiver.class);
         SharedPreferences sharedPreferences = context.getSharedPreferences("TIMER", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        _intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        _intent.putExtra("alarmId", alarmId);
-        _intent.putExtra("repeatNumber", numOfAds);
+        broadcastIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        broadcastIntent.putExtra("alarmId", alarmId);
+        broadcastIntent.putExtra("repeatNumber", numOfAds);
         editor.remove("alarmCount");
         editor.apply();
         long alarmTriggerTime = System.currentTimeMillis() + delay;
-        pendingIntent = PendingIntent.getBroadcast(context, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alarmTriggerTime,
                 delay, pendingIntent);

@@ -3,13 +3,14 @@ package com.example.adviewer.viewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+
 import androidx.lifecycle.ViewModel;
 
 import com.example.adviewer.R;
 import com.example.adviewer.model.UserDatabase;
+import com.example.adviewer.utility.InputValidation;
 import com.example.adviewer.view.SignUpScreen;
 
 public class LoginViewModel extends ViewModel {
@@ -17,13 +18,14 @@ public class LoginViewModel extends ViewModel {
     private String email;
     private String password;
     ViewModelListener viewModelListener;
-
+    private InputValidation inputValidation;
     private UserDatabase databaseHelper;
     boolean isLoggedIn = false;
     private final Context context;
 
     public LoginViewModel(Context context) {
         this.context = context;
+        inputValidation = new InputValidation(context);
 
         if (context instanceof ViewModelListener) {
             viewModelListener = (ViewModelListener) context;
@@ -54,23 +56,35 @@ public class LoginViewModel extends ViewModel {
             viewModelListener.onFailure(context.getString(R.string.error_message_email));
         } else if (password.isEmpty()) {
             viewModelListener.onFailure(context.getString(R.string.error_message_password));
-        } else if (!isInputEditTextEmail(email)) {
+        } else if (inputValidation.isInputEditTextEmail(email)) {
             viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (databaseHelper.checkUser(email, password)) {
+            restoreInitialState();
             viewModelListener.onSuccess();
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            isLoggedIn = true;
-            prefs.edit().putBoolean("Islogin", isLoggedIn).apply();
-            prefs.edit().putString("rewardAdsMonth", "0").apply();
-            prefs.edit().putString("interAdsMonth", "0").apply();
-            prefs.edit().putString("rewardAdsDay", "0").apply();
-            prefs.edit().putString("interAdsDay", "0").apply();
-            prefs.edit().putString("interstitialAds", "0").apply();
-            prefs.edit().putString("rewardAds", "0").apply();
-            //prefs.edit().putString("userEmail", email).commit();
+
         } else {
             viewModelListener.onFailure(context.getString(R.string.login_fail_error));
         }
+    }
+
+    public void restoreInitialState() {
+        SharedPreferences loginSharedPreferences = context.getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = loginSharedPreferences.edit();
+        SharedPreferences statsSharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
+        SharedPreferences.Editor statsEditor = statsSharedPreferences.edit();
+        SharedPreferences settingsSharedPreferences = context.getSharedPreferences("SETTINGS", Context.MODE_PRIVATE);
+        SharedPreferences.Editor settingsEditor = settingsSharedPreferences.edit();
+        isLoggedIn = true;
+        editor.putBoolean("Islogin", isLoggedIn).apply();
+        statsEditor.putString("rewardAdsMonth", "0").apply();
+        statsEditor.putString("interAdsMonth", "0").apply();
+        statsEditor.putString("rewardAdsDay", "0").apply();
+        statsEditor.putString("interAdsDay", "0").apply();
+        statsEditor.putString("interstitialAds", "0").apply();
+        statsEditor.putString("rewardAds", "0").apply();
+        statsEditor.putString("rewardAdDuration", "0").apply();
+        settingsEditor.putInt("intervalPosition", 0).apply();
+        settingsEditor.putString("numOfAdCount", "0").apply();
     }
 
     public void onSignUpButtonClick(View view) {
@@ -79,8 +93,4 @@ public class LoginViewModel extends ViewModel {
         context.startActivity(intent);
     }
 
-    private boolean isInputEditTextEmail(String value) {
-        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        return value.matches(regex);
-    }
 }

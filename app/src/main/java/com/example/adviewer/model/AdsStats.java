@@ -59,7 +59,7 @@ public class AdsStats {
         this.totalAdsWatched = numberOfInterstitialAdsWatched + numberOfRewardAdsWatched;
     }
 
-    public int getNumberOfInterstitialAdsWatched() {
+    int getNumberOfInterstitialAdsWatched() {
         return numberOfInterstitialAdsWatched;
     }
 
@@ -67,7 +67,7 @@ public class AdsStats {
         this.numberOfInterstitialAdsWatched = numberOfInterstitialAdsWatched;
     }
 
-    public int getNumberOfRewardAdsWatched() {
+    int getNumberOfRewardAdsWatched() {
         return numberOfRewardAdsWatched;
     }
 
@@ -75,11 +75,11 @@ public class AdsStats {
         this.numberOfRewardAdsWatched = numberOfAdsWatched;
     }
 
-    public int getDurationOfAd() {
+    int getDurationOfAd() {
         return durationOfAd;
     }
 
-    public void setDurationOfAd(int durationOfAd) {
+    void setDurationOfAd(int durationOfAd) {
         this.durationOfAd = durationOfAd;
     }
 

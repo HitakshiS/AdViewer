@@ -17,24 +17,19 @@ public class UserDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Database Name
     private static final String DATABASE_NAME = "UserManager.db";
 
-    // User table name
     private static final String TABLE_USER = "user";
 
-    // User Table Columns names
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_NAME = "user_name";
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_PASSWORD = "user_password";
 
-    // create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
             + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
 
-    // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
 
@@ -139,11 +134,7 @@ public class UserDatabase extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if (cursorCount > 0) {
-            return true;
-        }
-
-        return false;
+        return cursorCount > 0;
     }
 
     public boolean checkUser(String email, String password) {
@@ -168,11 +159,7 @@ public class UserDatabase extends SQLiteOpenHelper {
 
         cursor.close();
         db.close();
-        if (cursorCount > 0) {
-            return true;
-        }
-
-        return false;
+        return cursorCount > 0;
     }
 }
 

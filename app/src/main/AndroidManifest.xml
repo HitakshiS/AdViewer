@@ -40,10 +40,6 @@
         <activity android:name=".view.HomeScreen"
             android:label="@string/home">
         </activity>
-        <activity
-            android:name=".view.AdsHistory"
-            android:label="Ads History" >
-        </activity>
     </application>
 
 </manifest>

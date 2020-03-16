@@ -23,8 +23,6 @@ import com.example.adviewer.viewModel.SignUpViewModel;
 
 public class SignUpScreen extends AppCompatActivity implements ViewModelListener {
 
-    private final AppCompatActivity activity = SignUpScreen.this;
-
     private EditText textInputEditTextName;
     private EditText textInputEditTextEmail;
     private EditText textInputEditTextPassword;

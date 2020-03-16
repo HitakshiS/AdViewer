@@ -17,24 +17,19 @@ public class AdsStatsDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Database Name
     private static final String DATABASE_NAME = "AdsStatsManager.db";
 
-    // User table name
     private static final String TABLE_ADS = "adsStats";
 
-    // User Table Columns names
     private static final String COLUMN_ADS_ID = "id";
     private static final String COLUMN_ADS_INTERSTITIAL = "ad_interstitial";
     private static final String COLUMN_ADS_REWARD = "user_email";
     private static final String COLUMN_ADS_DURATION = "user_password";
 
-    // create table sql query
     private String CREATE_ADS_TABLE = "CREATE TABLE " + TABLE_ADS + "("
             + COLUMN_ADS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_ADS_INTERSTITIAL + " INTEGER,"
             + COLUMN_ADS_REWARD + " INTEGER," + COLUMN_ADS_DURATION + " INTEGER" + ")";
 
-    // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_ADS;
 
 
