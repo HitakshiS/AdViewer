@@ -69,7 +69,7 @@
     <string name="server_error">An invalid response was received from the ad server.</string>
     <string name="invalid_id_error">The ad request was invalid; for instance, the ad unit ID was incorrect.</string>
     <string name="ad_error_general">Ad failed to load please retry.</string>
-    <string name="interstitial_ad_error">Ad did not load. Please retry after 2 seconds.</string>
+    <string name="interstitial_ad_error">Ad did not load. Please retry after 5 seconds.</string>
     <string name="interstitial_ad_loaded">Interstitial Ad Loaded</string>
     <string name="reward_ad_loaded">Rewarded ad loaded</string>
     <string name="reward_ad_failed_error">Failed to show rewarded ad</string>
@@ -81,6 +81,7 @@
     <string name="login_fail_error">You are either unregistered or entering a wrong password</string>
     <string name="interstial_ads_home_text">Interstial Ads</string>
     <string name="reward_ads_home_text">Reward Ads</string>
+    <string name="reward_retry_error">Rewarded ads failed to load please retry after 5 seconds.</string>
 </resources>
 
 

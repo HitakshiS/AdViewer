@@ -2,13 +2,23 @@ package com.example.adviewer.model;
 
 public class AdsStats {
     private int id;
+    private String user;
     private int numberOfRewardAdsWatched = 0;
     private int numberOfInterstitialAdsWatched = 0;
     private int numberOfRewardAdsDay = 0;
     private int numberOfInterstitialAdsDay = 0;
     private int numberOfRewardAdsMonth = 0;
     private int numberOfInterstitialAdsMonth = 0;
-    private int durationOfAd = 0;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    private long durationOfAd = 0;
     private int totalAdsWatched = 0;
 
     public int getId() {
@@ -67,7 +77,7 @@ public class AdsStats {
         this.numberOfInterstitialAdsWatched = numberOfInterstitialAdsWatched;
     }
 
-    int getNumberOfRewardAdsWatched() {
+    public int getNumberOfRewardAdsWatched() {
         return numberOfRewardAdsWatched;
     }
 
@@ -75,11 +85,11 @@ public class AdsStats {
         this.numberOfRewardAdsWatched = numberOfAdsWatched;
     }
 
-    int getDurationOfAd() {
+    public long getDurationOfAd() {
         return durationOfAd;
     }
 
-    void setDurationOfAd(int durationOfAd) {
+    public void setDurationOfAd(long durationOfAd) {
         this.durationOfAd = durationOfAd;
     }
 

@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.lifecycle.ViewModel;
 
 import com.example.adviewer.R;
+import com.example.adviewer.model.AdsStats;
 import com.example.adviewer.model.User;
 import com.example.adviewer.model.UserDatabase;
 import com.example.adviewer.utility.InputValidation;
@@ -21,6 +22,7 @@ public class SignUpViewModel extends ViewModel {
     private String password;
     ViewModelListener viewModelListener;
     private User user = new User();
+    private AdsStats adsStats = new AdsStats();
     private InputValidation inputValidation;
     public UserDatabase databaseHelper;
     private final Context context;

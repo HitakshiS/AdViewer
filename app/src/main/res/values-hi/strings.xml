@@ -71,7 +71,8 @@
     <string name="interstitial_ad_loaded">" इंटरस्टीशियल विज्ञापन लोड किया गया"</string>
     <string name="reward_ad_failed_error">पुरस्कृत विज्ञापन दिखाने में विफल</string>
     <string name="reward_ad_loaded">" पुरस्कृत विज्ञापन लोड किया गया"</string>
-    <string name="interstitial_ad_error">" विज्ञापन लोड नहीं हुआ। कृपया पुन: प्रयास करें।"</string>
+    <string name="interstitial_ad_error">
+विज्ञापन लोड नहीं हुआ। कृपया 5 सेकंड के बाद पुनः प्रयास करें।</string>
     <string name="ads_select_text">" वह विज्ञापन चुनें जिसे आप देखना चाहते हैं"</string>
     <string name="interstial_ads_home_text">" इंटरस्टीशियल विज्ञापन"</string>
     <string name="login_fail_error">आप या तो अपंजीकृत हैं या गलत पासवर्ड दर्ज कर रहे हैं</string>

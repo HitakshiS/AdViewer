@@ -32,10 +32,20 @@ public class UserDatabase extends SQLiteOpenHelper {
 
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
+//
+//    @Override
+//    public void onCreate(SQLiteDatabase db) {
+//        db.execSQL(CREATE_USER_TABLE);
+//    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(
+                "create table user " +
+                        "(user_id integer primary key NOT NULL, user_name text NOT NULL , " +
+                        "user_email text NOT NULL, " +
+                        "user_password text NOT NULL)"
+        );
     }
 
 

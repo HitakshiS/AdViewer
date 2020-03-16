@@ -12,6 +12,7 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.example.adviewer.R;
 import com.example.adviewer.model.AdsStats;
+import com.example.adviewer.model.AdsStatsDatabase;
 import com.example.adviewer.utility.AppUtilities;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -43,6 +44,7 @@ public class HomeViewModel extends BaseObservable {
     private String interstitialMonthCount = "0";
     private String rewardDayCount = "0";
     private String rewardMonthCount = "0";
+    public AdsStatsDatabase adsStatsDatabase;
 
 
     @Bindable
@@ -132,6 +134,7 @@ public class HomeViewModel extends BaseObservable {
             viewModelListener = (ViewModelListener) context;
         }
         appUtilities = new AppUtilities(context);
+        adsStatsDatabase = new AdsStatsDatabase(context);
         MobileAds.initialize(context, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -222,6 +225,13 @@ public class HomeViewModel extends BaseObservable {
             adsStats.setNumberOfInterstitialAdsDay(intDay);
             setInterstitialMonthCount(String.valueOf(intMonth));
             adsStats.setNumberOfInterstitialAdsMonth(intMonth);
+
+            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
+                adsStatsDatabase.addAdsData(adsStats);
+            }
+            else {
+                adsStatsDatabase.updateAdsData(adsStats);
+            }
         } else {
             Toast.makeText(context, R.string.interstitial_ad_error, Toast.LENGTH_SHORT).show();
             startInterstitial();
@@ -335,6 +345,13 @@ public class HomeViewModel extends BaseObservable {
                             adsStats.setNumberOfRewardAdsDay(rwdDay);
                             setRewardMonthCount(String.valueOf(rwdMonth));
                             adsStats.setNumberOfRewardAdsMonth(rwdMonth);
+
+                            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
+                                adsStatsDatabase.addAdsData(adsStats);
+                            }
+                            else {
+                                adsStatsDatabase.updateAdsData(adsStats);
+                            }
                         }
 
                         @Override
@@ -347,8 +364,15 @@ public class HomeViewModel extends BaseObservable {
                             long duration = addClosed - addOpened;
                             duration = duration / 1000;
                             duration = duration + Long.valueOf(rewardDuration);
-                            setDurationCount(String.valueOf(duration) + " sec");
+                            setDurationCount(duration + " sec");
+                            adsStats.setDurationOfAd(duration);
                             editor.putString("rewardAdDuration", String.valueOf(duration)).apply();
+                            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
+                                adsStatsDatabase.addAdsData(adsStats);
+                            }
+                            else {
+                                adsStatsDatabase.updateAdsData(adsStats);
+                            }
                         }
 
                         @Override
@@ -359,11 +383,24 @@ public class HomeViewModel extends BaseObservable {
 
                         @Override
                         public void onRewardedAdFailedToShow(int errorCode) {
-                            Toast.makeText(context, R.string.reward_ad_failed_error, Toast.LENGTH_SHORT)
-                                    .show();
+                            if (errorCode == 0) {
+                                Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
+                            } else if (errorCode == 1) {
+                                Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
+                            } else if (errorCode == 2) {
+                                Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
+                            } else if (errorCode == 3) {
+                                Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, R.string.reward_ad_failed_error, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     };
             rewardedAd.show((Activity) context, adCallback);
+        }
+        else {
+            Toast.makeText(context, R.string.reward_retry_error, Toast.LENGTH_SHORT).show();
+            startReward();
         }
     }
 }

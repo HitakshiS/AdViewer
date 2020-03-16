@@ -9,6 +9,8 @@ import android.view.View;
 import androidx.lifecycle.ViewModel;
 
 import com.example.adviewer.R;
+import com.example.adviewer.model.AdsStats;
+import com.example.adviewer.model.User;
 import com.example.adviewer.model.UserDatabase;
 import com.example.adviewer.utility.InputValidation;
 import com.example.adviewer.view.SignUpScreen;
@@ -22,6 +24,8 @@ public class LoginViewModel extends ViewModel {
     private UserDatabase databaseHelper;
     boolean isLoggedIn = false;
     private final Context context;
+    private User user = new User();
+    private AdsStats adsStats = new AdsStats();
 
     public LoginViewModel(Context context) {
         this.context = context;
@@ -60,8 +64,8 @@ public class LoginViewModel extends ViewModel {
             viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (databaseHelper.checkUser(email, password)) {
             restoreInitialState();
+            adsStats.setUser(email);
             viewModelListener.onSuccess();
-
         } else {
             viewModelListener.onFailure(context.getString(R.string.login_fail_error));
         }
