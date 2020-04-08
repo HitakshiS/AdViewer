@@ -1,13 +1,18 @@
 package com.example.adviewer.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -17,10 +22,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.adviewer.R;
 import com.example.adviewer.model.AdsStats;
+import com.example.adviewer.model.AdsStatsDatabase;
 import com.example.adviewer.utility.AppUtilities;
 import com.example.adviewer.viewModel.HomeViewModel;
 import com.example.adviewer.databinding.HomeScreenBinding;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Objects;
 
 public class HomeScreen extends AppCompatActivity {
 
@@ -29,6 +37,15 @@ public class HomeScreen extends AppCompatActivity {
     HomeViewModel homeModel;
     AdsStats adsStats = new AdsStats();
     AppUtilities appUtilities = new AppUtilities(HomeScreen.this);
+    AdsStatsDatabase adsStatsDatabase = new AdsStatsDatabase(HomeScreen.this);
+    String userEmail;
+    String numOfInterstitialAds;
+    String numOfRewardAds;
+    String rewardAdDuration;
+    String interDayCount;
+    String interMonthCount;
+    String rewardDayCount;
+    String rewardMonthCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +54,8 @@ public class HomeScreen extends AppCompatActivity {
         homeModel = new HomeViewModel(HomeScreen.this);
         binding.setViewModel(homeModel);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
-        String numOfInterstitialAds = sharedPreferences.getString("interstitialAds", "0");
-        String numOfRewardAds = sharedPreferences.getString("rewardAds", "0");
-        String rewardAdDuration = sharedPreferences.getString("rewardAdDuration", "0 sec");
-        String interDayCount = sharedPreferences.getString("interAdsDay", "0");
-        String interMonthCount = sharedPreferences.getString("interAdsMonth", "0");
-        String rewardDayCount = sharedPreferences.getString("rewardAdsDay", "0");
-        String rewardMonthCount = sharedPreferences.getString("rewardAdsMonth", "0");
+        SharedPreferences userPreferences = getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+        userEmail = userPreferences.getString("userEmail", "");
 
         TextView title = binding.gameTitle;
         homeModel.setTitle(getString(R.string.ads_select_text));
@@ -52,23 +63,23 @@ public class HomeScreen extends AppCompatActivity {
 
 
         TextView interstitialCount = binding.interstitialCountText;
-        if (!numOfInterstitialAds.equals("0")) {
+        if (extractUserData()) {
             interstitialCount.setText(numOfInterstitialAds);
         }
-        if(!interstitialCount.getText().toString().equals("")){
+        if (!interstitialCount.getText().toString().equals("")) {
             adsStats.setNumberOfInterstitialAdsWatched(Integer.valueOf(interstitialCount.getText().toString()));
         }
         homeModel.setInterstitialCount(interstitialCount.getText().toString());
 
         TextView rewardCount = binding.rewardCountText;
-        if (!numOfRewardAds.equals("0")) {
+        if (extractUserData()) {
             rewardCount.setText(numOfRewardAds);
             adsStats.setNumberOfRewardAdsWatched(Integer.valueOf(numOfRewardAds));
         }
         homeModel.setRewardCount(rewardCount.getText().toString());
 
         TextView durationCount = binding.durationCountText;
-        if (!rewardAdDuration.equals("0 sec")) {
+        if (extractUserData()) {
             durationCount.setText(rewardAdDuration + " sec");
         }
         homeModel.setDurationCount(durationCount.getText().toString());
@@ -91,25 +102,25 @@ public class HomeScreen extends AppCompatActivity {
         });
 
         TextView interDay = binding.interstitialDayCountText;
-        if (!interDayCount.equals("0")) {
+        if (extractUserData()) {
             interDay.setText(interDayCount);
         }
         homeModel.setInterstitialDayCount(interDay.getText().toString());
 
         TextView interMonth = binding.interstitialMonthCountText;
-        if (!interMonthCount.equals("0")) {
+        if (extractUserData()) {
             interMonth.setText(interMonthCount);
         }
         homeModel.setInterstitialMonthCount(interMonth.getText().toString());
 
         TextView rewardDay = binding.rewardDayCountText;
-        if (!rewardDayCount.equals("0")) {
+        if (extractUserData()) {
             rewardDay.setText(rewardDayCount);
         }
         homeModel.setRewardDayCount(rewardDay.getText().toString());
 
         TextView rewardMonth = binding.rewardMonthCountText;
-        if (!rewardMonthCount.equals("0")) {
+        if (extractUserData()) {
             rewardMonth.setText(rewardMonthCount);
         }
         homeModel.setRewardMonthCount(rewardMonth.getText().toString());
@@ -121,7 +132,7 @@ public class HomeScreen extends AppCompatActivity {
         dl.addDrawerListener(t);
         t.syncState();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
         NavigationView nv = findViewById(R.id.nav_view);
@@ -137,11 +148,7 @@ public class HomeScreen extends AppCompatActivity {
                         break;
                     }
                     case R.id.logout: {
-                        SharedPreferences logOutSharedPreferences = getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = logOutSharedPreferences.edit();
-                        editor.putBoolean("Islogin", false).apply();
-                        Intent signInIntent = new Intent(HomeScreen.this, SignInScreen.class);
-                        startActivity(signInIntent);
+                        showConfimationDialog();
                         dl.closeDrawers();
                         return true;
                     }
@@ -163,6 +170,44 @@ public class HomeScreen extends AppCompatActivity {
         });
     }
 
+    private void showConfimationDialog() {
+        LayoutInflater li = LayoutInflater.from(HomeScreen.this);
+        final View popUpView = li.inflate(R.layout.popup_dialog, null);
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeScreen.this);
+        alertDialogBuilder.setView(popUpView);
+
+        TextView popUpHeadingText = popUpView.findViewById(R.id.alert_text);
+        popUpHeadingText.setText("Alert");
+
+        TextView messageText = popUpView.findViewById(R.id.message_text);
+        messageText.setText("Are you sure you want to log out! ");
+
+        alertDialogBuilder
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.ok_text),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                SharedPreferences logOutSharedPreferences = getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = logOutSharedPreferences.edit();
+                                editor.putBoolean("Islogin", false).apply();
+                                Intent signInIntent = new Intent(HomeScreen.this, SignInScreen.class);
+                                startActivity(signInIntent);
+
+                            }
+                        })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
     @Override
     public void onBackPressed() {
         this.finishAffinity();
@@ -181,6 +226,23 @@ public class HomeScreen extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         homeModel.showStats();
+    }
+
+    public boolean extractUserData() {
+        Cursor rs = adsStatsDatabase.getUserStats(userEmail);
+        rs.moveToFirst();
+        if (rs.getCount() == 0) {
+            return false;
+        } else {
+            numOfInterstitialAds = String.valueOf(rs.getString(rs.getColumnIndex("ad_interstitial")));
+            numOfRewardAds = String.valueOf(rs.getString(rs.getColumnIndex("ad_reward")));
+            rewardAdDuration = String.valueOf(rs.getString(rs.getColumnIndex("ad_duration")));
+            interDayCount = String.valueOf(rs.getString(rs.getColumnIndex("ad_interstitial_day")));
+            interMonthCount = String.valueOf(rs.getString(rs.getColumnIndex("ad_interstitial_month")));
+            rewardDayCount = String.valueOf(rs.getString(rs.getColumnIndex("ad_reward_day")));
+            rewardMonthCount = String.valueOf(rs.getString(rs.getColumnIndex("ad_reward_month")));
+            return true;
+        }
     }
 }
 

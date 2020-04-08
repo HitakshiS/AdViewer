@@ -24,6 +24,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
+
             <TextView
                 android:id="@+id/signin_text"
                 android:layout_width="match_parent"
@@ -37,7 +38,6 @@
                 android:textSize="30sp"
                 android:fontFamily="cursive"
                 android:textStyle="bold"/>
-
 
             <EditText
                 android:id="@+id/email"
@@ -84,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dip"
                 android:background="@null"
-
                 android:text="@string/btn_link_to_register"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

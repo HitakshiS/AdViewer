@@ -63,7 +63,7 @@ public class LoginViewModel extends ViewModel {
         } else if (inputValidation.isInputEditTextEmail(email)) {
             viewModelListener.onFailure(context.getString(R.string.error_message_invalid_email));
         } else if (databaseHelper.checkUser(email, password)) {
-            restoreInitialState();
+            restoreInitialState(email);
             adsStats.setUser(email);
             viewModelListener.onSuccess();
         } else {
@@ -71,7 +71,7 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void restoreInitialState() {
+    public void restoreInitialState(String userEmail) {
         SharedPreferences loginSharedPreferences = context.getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = loginSharedPreferences.edit();
         SharedPreferences statsSharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
@@ -80,6 +80,7 @@ public class LoginViewModel extends ViewModel {
         SharedPreferences.Editor settingsEditor = settingsSharedPreferences.edit();
         isLoggedIn = true;
         editor.putBoolean("Islogin", isLoggedIn).apply();
+        editor.putString("userEmail", userEmail).apply();
         statsEditor.putString("rewardAdsMonth", "0").apply();
         statsEditor.putString("interAdsMonth", "0").apply();
         statsEditor.putString("rewardAdsDay", "0").apply();

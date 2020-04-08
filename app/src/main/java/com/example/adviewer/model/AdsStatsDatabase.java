@@ -147,36 +147,34 @@ public class AdsStatsDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-//    public boolean checkUserStats(String user) {
-//
-//        String[] columns = {
-//                COLUMN_ADS_ID
-//        };
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        String selection = USER + " = ?";
-//
-//        String[] selectionArgs = {user};
-//
-//        Cursor cursor = db.query(TABLE_ADS,
-//                columns,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null);
-//        int cursorCount = cursor.getCount();
-//        cursor.close();
-//        db.close();
-//
-//        return cursorCount > 0;
-//    }
+    public boolean checkUserStats(String user) {
 
-    public boolean checkUserStats(String startUser) {
+        String[] columns = {
+                COLUMN_ADS_ID
+        };
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from adsStats where user = '" + startUser + "'", null );
-        int cursorCount = res.getCount();
+
+        String selection = USER + " = ?";
+
+        String[] selectionArgs = {user};
+
+        Cursor cursor = db.query(TABLE_ADS,
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+        int cursorCount = cursor.getCount();
+        cursor.close();
+        db.close();
+
         return cursorCount > 0;
     }
 
+    public Cursor getUserStats(String startUser) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from adsStats where user = '" + startUser + "'", null );
+        return res;
+    }
 }

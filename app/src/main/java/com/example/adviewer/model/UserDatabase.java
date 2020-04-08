@@ -166,7 +166,6 @@ public class UserDatabase extends SQLiteOpenHelper {
                 null);
 
         int cursorCount = cursor.getCount();
-
         cursor.close();
         db.close();
         return cursorCount > 0;

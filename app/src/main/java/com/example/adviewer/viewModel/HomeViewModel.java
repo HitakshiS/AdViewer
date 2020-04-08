@@ -148,6 +148,18 @@ public class HomeViewModel extends BaseObservable {
 
     }
 
+    public void userDatabaseCheck() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("LOGIN", Context.MODE_PRIVATE);
+        String userEmail = sharedPreferences.getString("userEmail", "");
+        adsStats.setUser(userEmail);
+        if (!adsStatsDatabase.checkUserStats(userEmail)) {
+            adsStatsDatabase.addAdsData(adsStats);
+        }
+        else {
+            adsStatsDatabase.updateAdsData(adsStats);
+        }
+    }
+
     public void showStats() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("CALENDAR", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -226,12 +238,7 @@ public class HomeViewModel extends BaseObservable {
             setInterstitialMonthCount(String.valueOf(intMonth));
             adsStats.setNumberOfInterstitialAdsMonth(intMonth);
 
-            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
-                adsStatsDatabase.addAdsData(adsStats);
-            }
-            else {
-                adsStatsDatabase.updateAdsData(adsStats);
-            }
+            userDatabaseCheck();
         } else {
             Toast.makeText(context, R.string.interstitial_ad_error, Toast.LENGTH_SHORT).show();
             startInterstitial();
@@ -249,17 +256,17 @@ public class HomeViewModel extends BaseObservable {
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                if (errorCode == 0) {
-                    Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
-                } else if (errorCode == 1) {
-                    Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
-                } else if (errorCode == 2) {
-                    Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
-                } else if (errorCode == 3) {
-                    Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, R.string.ad_error_general, Toast.LENGTH_SHORT).show();
-                }
+//                if (errorCode == 0) {
+//                    Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == 1) {
+//                    Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == 2) {
+//                    Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
+//                } else if (errorCode == 3) {
+//                    Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(context, R.string.ad_error_general, Toast.LENGTH_SHORT).show();
+//                }
 
             }
 
@@ -290,17 +297,17 @@ public class HomeViewModel extends BaseObservable {
 
                         @Override
                         public void onRewardedAdFailedToLoad(int errorCode) {
-                            if (errorCode == 0) {
-                                Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 1) {
-                                Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 2) {
-                                Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 3) {
-                                Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, R.string.ad_error_general, Toast.LENGTH_SHORT).show();
-                            }
+//                            if (errorCode == 0) {
+//                                Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 1) {
+//                                Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 2) {
+//                                Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 3) {
+//                                Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(context, R.string.ad_error_general, Toast.LENGTH_SHORT).show();
+//                            }
                         }
                     });
         }
@@ -346,12 +353,7 @@ public class HomeViewModel extends BaseObservable {
                             setRewardMonthCount(String.valueOf(rwdMonth));
                             adsStats.setNumberOfRewardAdsMonth(rwdMonth);
 
-                            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
-                                adsStatsDatabase.addAdsData(adsStats);
-                            }
-                            else {
-                                adsStatsDatabase.updateAdsData(adsStats);
-                            }
+                            userDatabaseCheck();
                         }
 
                         @Override
@@ -367,12 +369,8 @@ public class HomeViewModel extends BaseObservable {
                             setDurationCount(duration + " sec");
                             adsStats.setDurationOfAd(duration);
                             editor.putString("rewardAdDuration", String.valueOf(duration)).apply();
-                            if (!adsStatsDatabase.checkUserStats(adsStats.getUser())) {
-                                adsStatsDatabase.addAdsData(adsStats);
-                            }
-                            else {
-                                adsStatsDatabase.updateAdsData(adsStats);
-                            }
+
+                            userDatabaseCheck();
                         }
 
                         @Override
@@ -383,17 +381,17 @@ public class HomeViewModel extends BaseObservable {
 
                         @Override
                         public void onRewardedAdFailedToShow(int errorCode) {
-                            if (errorCode == 0) {
-                                Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 1) {
-                                Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 2) {
-                                Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
-                            } else if (errorCode == 3) {
-                                Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, R.string.reward_ad_failed_error, Toast.LENGTH_SHORT).show();
-                            }
+//                            if (errorCode == 0) {
+//                                Toast.makeText(context, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 1) {
+//                                Toast.makeText(context, R.string.invalid_id_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 2) {
+//                                Toast.makeText(context, R.string.ad_network_error, Toast.LENGTH_SHORT).show();
+//                            } else if (errorCode == 3) {
+//                                Toast.makeText(context, R.string.lack_of_inventory_error, Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(context, R.string.reward_ad_failed_error, Toast.LENGTH_SHORT).show();
+//                            }
                         }
                     };
             rewardedAd.show((Activity) context, adCallback);
